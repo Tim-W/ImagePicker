@@ -129,12 +129,16 @@ public class ImagePicker extends CordovaPlugin {
         if (resultCode == Activity.RESULT_OK && data != null) {
             ArrayList<String> fileNames = new ArrayList();
 
-            for(int i = 0; i < data.getClipData().getItemCount(); i++) {
-                ClipData.Item item = data.getClipData().getItemAt(i);
+            if (data.getClipData() != null) {
+                for(int i = 0; i < data.getClipData().getItemCount(); i++) {
+                    ClipData.Item item = data.getClipData().getItemAt(i);
 
-                // Tries to get the item's contents as a URI pointing to a note
-                String uri = item.getUri().toString();
-                fileNames.add(uri);
+                    // Tries to get the item's contents as a URI pointing to a note
+                    String uri = item.getUri().toString();
+                    fileNames.add(uri);
+                }
+            } else {
+                fileNames.add(data.getData().toString());
             }
 
             JSONArray res = new JSONArray(fileNames);
