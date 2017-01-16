@@ -76,7 +76,6 @@ public class ImagePicker extends CordovaPlugin {
             final Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
                 intent.setType("image/*");
                 intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-                intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
 
             // some day, when everybody uses a cordova version supporting 'hasPermission', enable this:
             if (cordova != null) {
@@ -127,7 +126,16 @@ public class ImagePicker extends CordovaPlugin {
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK && data != null) {
-            ArrayList<String> fileNames = data.getStringArrayListExtra("MULTIPLEFILENAMES");
+            ArrayList<String> fileNames = new ArrayList();
+
+            for(int i = 0; i < data.getClipData().getItemCount(); i++) {
+                ClipData.Item item = clip.getItemAt(i);
+
+                // Tries to get the item's contents as a URI pointing to a note
+                String uri = item.getUri().toString();
+                fileNames.add(uri);
+            }
+
             JSONArray res = new JSONArray(fileNames);
             callbackContext.success(res);
 
