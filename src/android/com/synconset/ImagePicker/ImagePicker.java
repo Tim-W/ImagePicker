@@ -73,11 +73,16 @@ public class ImagePicker extends CordovaPlugin {
             imagePickerIntent.putExtra("QUALITY", quality);
             imagePickerIntent.putExtra("OUTPUT_TYPE", outputType);
 
+            final Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType("image/*");
+                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
+
             // some day, when everybody uses a cordova version supporting 'hasPermission', enable this:
             /*
             if (cordova != null) {
                  if (cordova.hasPermission(Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                    cordova.startActivityForResult(this, imagePickerIntent, 0);
+                    cordova.startActivityForResult(this, Intent.createChooser(intent, "Add images"), 0);
                  } else {
                      cordova.requestPermission(
                              this,
